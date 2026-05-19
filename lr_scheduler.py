@@ -1,12 +1,3 @@
-"""
-Noam Learning Rate Scheduler
-Reference: "Attention Is All You Need" (Vaswani et al., 2017)
-           https://arxiv.org/abs/1706.03762
-
-Formula:
-    lrate = d_model^(-0.5) * min(step^(-0.5), step * warmup_steps^(-1.5))
-"""
-
 import torch
 import torch.optim as optim
 from torch.optim.lr_scheduler import LRScheduler
@@ -15,16 +6,6 @@ from torch.optim.lr_scheduler import LRScheduler
 class NoamScheduler(LRScheduler):
     """
     Noam learning rate scheduler as described in "Attention Is All You Need".
-
-    Applies a warm-up phase where LR increases linearly, followed by
-    a decay phase where LR decreases proportional to the inverse square
-    root of the step number.
-
-    Args:
-        optimizer (torch.optim.Optimizer): Wrapped optimizer.
-        d_model          (int)  : Model dimensionality (embedding size).
-        warmup_steps     (int)  : Number of warm-up steps before decay begins.
-        last_epoch       (int)  : The index of the last epoch. Default: -1.
     """
 
     def __init__(
@@ -47,9 +28,6 @@ class NoamScheduler(LRScheduler):
         return [base_lr * scale for base_lr in self.base_lrs]
 
 
-# ──────────────────────────────────────────────────────────────────────
-# Helper — do NOT modify
-# ──────────────────────────────────────────────────────────────────────
 
 def get_lr_history(
     d_model: int,

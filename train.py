@@ -1,20 +1,3 @@
-"""
-train.py — Training Pipeline, Inference & Evaluation
-DA6401 Assignment 3: "Attention Is All You Need"
-
-AUTOGRADER CONTRACT (DO NOT MODIFY SIGNATURES):
-  ┌─────────────────────────────────────────────────────────────────────┐
-  │  greedy_decode(model, src, src_mask, max_len, start_symbol)         │
-  │      → torch.Tensor  shape [1, out_len]  (token indices)            │
-  │                                                                     │
-  │  evaluate_bleu(model, test_dataloader, tgt_vocab, device)           │
-  │      → float  (corpus-level BLEU score, 0–100)                      │
-  │                                                                     │
-  │  save_checkpoint(model, optimizer, scheduler, epoch, path) → None   │
-  │  load_checkpoint(path, model, optimizer, scheduler)        → int    │
-  └─────────────────────────────────────────────────────────────────────┘
-"""
-
 import math
 import collections
 import torch
@@ -72,13 +55,6 @@ from lr_scheduler import NoamScheduler
 
 
 class LabelSmoothingLoss(nn.Module):
-    """
-    Label smoothing as in "Attention Is All You Need"
-
-    Smoothed target distribution:
-        y_smooth = (1 - eps) * one_hot(y) + eps / (vocab_size - 1)
-    """
-
     def __init__(self, vocab_size: int, pad_idx: int, smoothing: float = 0.1) -> None:
         super().__init__()
         self.vocab_size = vocab_size

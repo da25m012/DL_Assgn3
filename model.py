@@ -1,19 +1,3 @@
-"""
-model.py — Transformer Architecture
-DA6401 Assignment 3: "Attention Is All You Need"
-
-AUTOGRADER CONTRACT (DO NOT MODIFY SIGNATURES):
-  ┌─────────────────────────────────────────────────────────────────┐
-  │  scaled_dot_product_attention(Q, K, V, mask) → (out, weights)  │
-  │  MultiHeadAttention.forward(q, k, v, mask)   → Tensor          │
-  │  PositionalEncoding.forward(x)               → Tensor          │
-  │  make_src_mask(src, pad_idx)                 → BoolTensor      │
-  │  make_tgt_mask(tgt, pad_idx)                 → BoolTensor      │
-  │  Transformer.encode(src, src_mask)           → Tensor          │
-  │  Transformer.decode(memory,src_m,tgt,tgt_m)  → Tensor          │
-  └─────────────────────────────────────────────────────────────────┘
-"""
-
 import math
 import copy
 import os
@@ -202,14 +186,7 @@ class Decoder(nn.Module):
 
 class Transformer(nn.Module):
     """
-    Full Encoder-Decoder Transformer for German→English translation.
-
-    On construction:
-      - Loads spacy tokenizers for de and en
-      - Builds/loads src and tgt vocabularies from Multi30k
-      - Downloads model weights from Google Drive via gdown
-      - Loads weights into the architecture
-    All arguments have sensible defaults matching the "base" paper configuration.
+    Full Encoder-Decoder Transformer for German to English translation.
     """
 
     def __init__(
@@ -223,15 +200,11 @@ class Transformer(nn.Module):
         gdrive_file_id: str = "1a5UPWOyneoleXRce694iGx86E6bJX54H",
         checkpoint_path: str = "transformer_best.pt",
     ) -> None:
-        # We don't know vocab sizes yet — we need to build them first.
-        # So we defer nn.Module init until we have the vocab sizes.
-        # We call super().__init__() first as required.
         super().__init__()
 
         self.d_model   = d_model
         self.max_len   = max_len
 
-        # download spacy models if not already present, then load
         try:
             self.de_nlp = spacy.load("de_core_news_sm")
         except OSError:
@@ -336,12 +309,6 @@ class Transformer(nn.Module):
     def infer(self, src_sentence: str, max_len: int = 100) -> str:
         """
         Translates a German sentence to English using greedy autoregressive decoding.
-
-        Args:
-            src_sentence: The raw German text.
-
-        Returns:
-            The fully translated English string, detokenized and clean.
         """
         self.eval()
         device = next(self.parameters()).device
